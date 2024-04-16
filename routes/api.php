@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Requests\Api\Site\CreateContactUsRequest;
+use App\Http\Resources\ContactUsResource;
+use App\Models\ContactUs;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Site\{BlogController,
     CategoryController,
@@ -56,4 +59,15 @@ Route:: as('site.')
         Route::get('portfolio-categories', PortfolioCategoryController::class)->name('portfolio-categories');
         Route::get('portfolios', PortfolioController::class)->name('portfolios');
         Route::post('contactUs', ContactUsController::class);
+
+
+        Route::post('saveContact',function (CreateContactUsRequest $createContactUsRequest){
+            $contactUs = ContactUs::create($createContactUsRequest->validated());
+            if ($createContactUsRequest->hasFile('file') && $createContactUsRequest->file('file')->isValid()) {
+                $contactUs->addMediaFromRequest('file')
+                    ->sanitizingFileName(fn($fileName) => updateFileName($fileName))
+                    ->toMediaCollection(ContactUs::MEDIA_COLLECTION_NAME);
+            }
+            return new ContactUsResource($contactUs);
+        });
     });
