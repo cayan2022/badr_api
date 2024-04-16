@@ -16,7 +16,7 @@ class ContactUsController extends Controller
      * @param  CreateContactUsRequest  $request
      * @return ContactUsResource
      */
-    public function store(CreateContactUsRequest $request)
+    public function _invoke(CreateContactUsRequest $request)
     {
         $contactUs= ContactUs::create($request->validated());
         if($request->hasFile('file') && $request->file('file')->isValid()){
@@ -24,6 +24,6 @@ class ContactUsController extends Controller
                 ->sanitizingFileName(fn($fileName)=>updateFileName($fileName))
                 ->toMediaCollection(ContactUs::MEDIA_COLLECTION_NAME);
         }
-        return $contactUs->getResource();
+        return $contactUs->getResource($contactUs);
     }
 }
