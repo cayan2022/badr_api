@@ -12,7 +12,14 @@ class ContactUsController extends Controller
 {
     public function store(Request $createContactUsRequest): ContactUsResource
     {
-        $contactUs = ContactUs::create($createContactUsRequest->validated());
+        $data = $createContactUsRequest->validate([
+            'name' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'message' => ['required', 'string'],
+            'file' => ['nullable', 'file'],
+        ]);
+
+        $contactUs = ContactUs::create($data);
         if ($createContactUsRequest->hasFile('file') && $createContactUsRequest->file('file')->isValid()) {
             $contactUs->addMediaFromRequest('file')
                 ->sanitizingFileName(fn($fileName) => updateFileName($fileName))
