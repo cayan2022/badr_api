@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Site\CreateContactUsRequest;
 use App\Http\Resources\ContactUsResource;
 use App\Models\ContactUs;
+use Illuminate\Http\Request;
 
 class ContactUsController extends Controller
 {
-    public function __invoke(CreateContactUsRequest $createContactUsRequest): ContactUsResource
+    public function __invoke(Request $createContactUsRequest): ContactUsResource
     {
         $contactUs = ContactUs::create($createContactUsRequest->validated());
         if ($createContactUsRequest->hasFile('file') && $createContactUsRequest->file('file')->isValid()) {
