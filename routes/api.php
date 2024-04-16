@@ -56,7 +56,4 @@ Route:: as('site.')
         Route::get('portfolio-categories', PortfolioCategoryController::class)->name('portfolio-categories');
         Route::get('portfolios', PortfolioController::class)->name('portfolios');
         Route::post('contact', ContactUsController::class)->name('contact.store');
-        Route::get('contact_m',function (){
-            dd('a7a');
-        });
     });
