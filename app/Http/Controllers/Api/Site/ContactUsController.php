@@ -9,14 +9,14 @@ use App\Models\ContactUs;
 
 class ContactUsController extends Controller
 {
-    public function addNew(CreateContactUsRequest $createContactUsRequest): ContactUsResource
+    public function __invoke(CreateContactUsRequest $createContactUsRequest): ContactUsResource
     {
-        $contactUs= ContactUs::create($createContactUsRequest->validated());
-        if($createContactUsRequest->hasFile('file') && $createContactUsRequest->file('file')->isValid()){
+        $contactUs = ContactUs::create($createContactUsRequest->validated());
+        if ($createContactUsRequest->hasFile('file') && $createContactUsRequest->file('file')->isValid()) {
             $contactUs->addMediaFromRequest('file')
-                ->sanitizingFileName(fn($fileName)=>updateFileName($fileName))
+                ->sanitizingFileName(fn($fileName) => updateFileName($fileName))
                 ->toMediaCollection(ContactUs::MEDIA_COLLECTION_NAME);
         }
-        return $contactUs->getResource($contactUs);
+        return new ContactUsResource($contactUs);
     }
 }

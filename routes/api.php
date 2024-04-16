@@ -55,5 +55,5 @@ Route:: as('site.')
         Route::post('order', OrderController::class)->name('order.store');
         Route::get('portfolio-categories', PortfolioCategoryController::class)->name('portfolio-categories');
         Route::get('portfolios', PortfolioController::class)->name('portfolios');
-        Route::post('contactUs', [ContactUsController::class, 'addNew'])->name('contactUs.addNew');
+        Route::post('contactUs', ContactUsController::class)->name('contactUs.store');
     });
