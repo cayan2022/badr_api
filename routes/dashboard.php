@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Dashboard\ProjectController;
-use App\Http\Controllers\Api\Dashboard\{
-    BlogController,
+use App\Http\Controllers\Api\Dashboard\{BlogController,
+    ContactUsController,
     RoleController,
     OfferController,
     AboutController,
@@ -30,8 +30,7 @@ use App\Http\Controllers\Api\Dashboard\{
     PortfolioController,
     Reports\SourcesReportController,
     Reports\StatusesReportController,
-    Reports\ModeratorsReportController
-};
+    Reports\ModeratorsReportController};
 
 /*permissions middleware
 1-no permission for show or index methods
@@ -206,6 +205,11 @@ Route:: as('dashboard.')
                 Route::put('portfolio-categories/{portfolio_category}/active', [PortfolioCategoryController::class, 'active'])->name('portfolio-categories.active')->middleware('can:active portfolio-categories');
                 Route::post('portfolio-categories/{portfolio_category}', [PortfolioCategoryController::class, 'update'])->name('portfolio-categories.update')->middleware('can:update portfolio-categories');
                 Route::apiResource('portfolio-categories', PortfolioCategoryController::class)->except('update')->middleware('check_permissions');
+            });
+            /*ContactUs*/
+            Route::group([], function () {
+                Route::get('contactUs', [ContactUsController::class, 'index'])->name('index')->middleware('check_permissions');;
+                Route::get('contactUs/{contactUs}', [ContactUsController::class, 'show'])->name('show')->middleware('check_permissions');;
             });
 
             /*Portfolios*/

@@ -18,7 +18,12 @@ class Project extends Model implements HasMedia, TranslatableContract
     use HasFactory, InteractsWithMedia, Translatable, Filterable, HasActivation;
 
     protected $fillable = [
-        'is_block'
+        'owner_name',
+        'developer_name',
+        'area',
+        'building_area',
+        'buildings_number',
+        'is_block',
     ];
     protected $casts=[
         'is_block' => 'boolean'
@@ -47,5 +52,21 @@ class Project extends Model implements HasMedia, TranslatableContract
         $this->addMediaCollection(self::MEDIA_COLLECTION_NAME)
             ->useFallbackUrl(asset(self::MEDIA_COLLECTION_URL))
             ->useFallbackPath(asset(self::MEDIA_COLLECTION_URL));
+        $this->addMediaCollection('developer_images')
+            ->useFallbackUrl(asset('developer_images'))
+            ->useFallbackPath(asset('developer_images'));
+        $this->addMediaCollection('owner_images')
+            ->useFallbackUrl(asset('owner_images'))
+            ->useFallbackPath(asset('owner_images'));
+        $this->addMediaCollection('project_sliders')
+            ->useFallbackUrl(asset('project_sliders'))
+            ->useFallbackPath(asset('project_sliders'));
+//        $this->addMediaCollection('developer_images');
+//        $this->addMediaCollection('owner_images');
+//        $this->addMediaCollection('project_sliders');
+    }
+    public function businessDomains()
+    {
+        return $this->hasMany(BusinessDomain::class);
     }
 }
