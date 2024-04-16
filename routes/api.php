@@ -56,4 +56,8 @@ Route:: as('site.')
         Route::get('portfolio-categories', PortfolioCategoryController::class)->name('portfolio-categories');
         Route::get('portfolios', PortfolioController::class)->name('portfolios');
         Route::post('contactUs', ContactUsController::class)->name('contactUs.store');
+
+        Route::post('test_m', function () {
+            return 'test';
+        });
     });
