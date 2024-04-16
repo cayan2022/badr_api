@@ -26,12 +26,23 @@ class UpdateProjectRequest extends FormRequest
      */
     public function rules()
     {
-        return  RuleFactory::make([
-            '%name%' => ['required', 'string','max:255'],
-            '%classification%' => ['required', 'string','max:255'],
+        return RuleFactory::make([
+            '%name%' => ['required', 'string', 'max:255'],
+            '%title%' => ['nullable', 'array'],
+            '%title.*%' => ['required', 'string', 'max:255'],
+            '%classification%' => ['required', 'string', 'max:255'],
             '%short_description%' => ['required', 'string'],
             '%full_description%' => ['required', 'string'],
-            'image' => ['nullable', new SupportedImage()]
+            'image' => ['nullable', new SupportedImage()],
+            'developer_name' => 'required|string|max:255',
+            'developer_image' => ['nullable', new SupportedImage()],
+            'owner_name' => 'required|string|max:255',
+            'owner_image' => ['nullable', new SupportedImage()],
+            'area' => 'required|numeric',
+            'building_area' => 'required|numeric',
+            'buildings_number' => 'required|integer',
+            'project_sliders' => ['nullable', 'array'],
+            'project_sliders.*' => ['required', 'image', new SupportedImage()],
         ]);
     }
 }

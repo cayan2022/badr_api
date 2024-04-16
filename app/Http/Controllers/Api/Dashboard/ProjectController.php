@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Dashboard;
 
+use App\Models\BusinessDomain;
 use App\Models\Project;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -30,7 +31,7 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  StoreProjectRequest  $request
+     * @param StoreProjectRequest $request
      * @return ProjectResource
      */
     public function store(StoreProjectRequest $request): ProjectResource
@@ -41,13 +42,41 @@ class ProjectController extends Controller
                 ->sanitizingFileName(fn($fileName) => updateFileName($fileName))
                 ->toMediaCollection(Project::MEDIA_COLLECTION_NAME);
         }
+        // Store developer name and image
+        if ($request->hasFile('developer_image') && $request->file('developer_image')->isValid()) {
+            $developerImage = $request->file('developer_image')->store('developer_images');
+            $validatedData['developer_image'] = $developerImage;
+        }
+
+        // Store owner name and image
+        if ($request->hasFile('owner_image') && $request->file('owner_image')->isValid()) {
+            $ownerImage = $request->file('owner_image')->store('owner_images');
+            $validatedData['owner_image'] = $ownerImage;
+        }
+        // Store project sliders
+        if ($request->hasFile('project_sliders')) {
+            foreach ($request->file('project_sliders') as $slider) {
+                $project->addMedia($slider)
+                    ->toMediaCollection('project_sliders');
+            }
+        }
+        if ($request->filled('business_domains')) {
+            foreach ($request->input('business_domains') as $domainData) {
+                $businessDomain = new BusinessDomain([
+                    'title' => $domainData['title'],
+                    'project_id' => $project->id,
+                ]);
+                $project->businessDomains()->save($businessDomain);
+            }
+        }
+
         return $project->getResource();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  Project  $project
+     * @param Project $project
      * @return ProjectResource
      */
     public function show(Project $project): ProjectResource
@@ -58,8 +87,8 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  UpdateProjectRequest  $request
-     * @param  Project  $project
+     * @param UpdateProjectRequest $request
+     * @param Project $project
      * @return ProjectResource
      */
     public function update(UpdateProjectRequest $request, Project $project): ProjectResource
@@ -72,6 +101,38 @@ class ProjectController extends Controller
                 ->sanitizingFileName(fn($fileName) => updateFileName($fileName))
                 ->toMediaCollection(Project::MEDIA_COLLECTION_NAME);
         }
+        // Store developer name and image
+        if ($request->hasFile('developer_image') && $request->file('developer_image')->isValid()) {
+            $developerImage = $request->file('developer_image')->store('developer_images');
+            $validatedData['developer_image'] = $developerImage;
+        }
+
+        // Store owner name and image
+        if ($request->hasFile('owner_image') && $request->file('owner_image')->isValid()) {
+            $ownerImage = $request->file('owner_image')->store('owner_images');
+            $validatedData['owner_image'] = $ownerImage;
+        }
+        // Store or update project sliders
+        if ($request->hasFile('project_sliders')) {
+            foreach ($request->file('project_sliders') as $slider) {
+                $project->addMedia($slider)
+                    ->toMediaCollection('project_sliders');
+            }
+        }
+        // Update BusinessDomains
+        if ($request->filled('business_domains')) {
+            // Delete existing domains
+            $project->businessDomains()->delete();
+
+            // Create new domains
+            foreach ($request->input('business_domains') as $domainData) {
+                $businessDomain = new BusinessDomain([
+                    'title' => $domainData['title'],
+                    'project_id' => $project->id,
+                ]);
+                $project->businessDomains()->save($businessDomain);
+            }
+        }
 
         return $project->getResource();
     }
@@ -79,7 +140,7 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Project  $project
+     * @param Project $project
      * @return Response
      */
     public function destroy(Project $project): Response
@@ -89,7 +150,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * @param  Project  $project
+     * @param Project $project
      * @return Application|ResponseFactory|Response
      */
     public function block(Project $project)
@@ -99,7 +160,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * @param  Project  $project
+     * @param Project $project
      * @return Application|ResponseFactory|Response
      */
     public function active(Project $project)

@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Site\{
-    BlogController,
+use App\Http\Controllers\Api\Site\{BlogController,
     CategoryController,
+    ContactUsController,
     OrderController,
     PartnerController,
     ProjectController,
@@ -17,8 +17,7 @@ use App\Http\Controllers\Api\Site\{
     TestimonialController,
     TidingController,
     PortfolioCategoryController,
-    PortfolioController,
-};
+    PortfolioController};
 
 
 /*
@@ -55,4 +54,5 @@ Route:: as('site.')
         Route::post('order', OrderController::class)->name('order.store');
         Route::get('portfolio-categories', PortfolioCategoryController::class)->name('portfolio-categories');
         Route::get('portfolios', PortfolioController::class)->name('portfolios');
+        Route::post('contactUs', [ContactUsController::class, 'store'])->name('contactUs.store');
     });
