@@ -40,13 +40,13 @@ class CheckPermissions
          * | app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
          */
 
-        if (in_array($route[1], ['store', 'destroy'])) {
-            $name=$route[1]==="destroy"?'delete':'create';
-            if ($authGuard->user()->hasPermissionTo($name." ".$route[0], 'api')) {
-                return $next($request);
-            }
-            return $exception(trans('auth.errors.has_no_permission'));
-        }
+//        if (in_array($route[1], ['store', 'destroy'])) {
+//            $name=$route[1]==="destroy"?'delete':'create';
+//            if ($authGuard->user()->hasPermissionTo($name." ".$route[0], 'api')) {
+//                return $next($request);
+//            }
+//            return $exception(trans('auth.errors.has_no_permission'));
+//        }
 
         return $next($request);
     }
