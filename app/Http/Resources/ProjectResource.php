@@ -14,10 +14,6 @@ class ProjectResource extends JsonResource
      */
     public function toArray($request)
     {
-        // Get all project sliders URLs
-        $projectSliders = $this->getMedia('project_sliders')->map(function ($media) {
-            return $media->getUrl();
-        });
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -35,7 +31,6 @@ class ProjectResource extends JsonResource
             'building_area' => $this->building_area,
             'is_block' => $this->is_block,
             'business_domains' => BusinessDomainResource::collection($this->businessDomains),
-            'project_sliders' => $projectSliders,
             'translations' => $this->getTranslationsArray()
         ];
     }

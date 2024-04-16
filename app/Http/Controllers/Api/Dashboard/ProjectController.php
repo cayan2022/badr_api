@@ -60,16 +60,21 @@ class ProjectController extends Controller
                     ->toMediaCollection('project_sliders');
             }
         }
-        if ($request->filled('business_domains')) {
-            foreach ($request->input('business_domains') as $domainData) {
-                $businessDomain = new BusinessDomain([
-                    'title' => $domainData['title'],
-                    'project_id' => $project->id,
-                ]);
-                $project->businessDomains()->save($businessDomain);
+        if ($request->filled('ar') || $request->filled('en')) {
+            foreach (['ar', 'en'] as $language) {
+                if (isset($request[$language]['title'])) {
+                    $titles = $request[$language]['title'];
+                    foreach ($titles as $title) {
+                        $businessDomain = new BusinessDomain([
+                            'title' => $title,
+                            'project_id' => $project->id,
+                            'language' => $language,
+                        ]);
+                        $project->businessDomains()->save($businessDomain);
+                    }
+                }
             }
         }
-
         return $project->getResource();
     }
 
@@ -119,18 +124,33 @@ class ProjectController extends Controller
                     ->toMediaCollection('project_sliders');
             }
         }
-        // Update BusinessDomains
-        if ($request->filled('business_domains')) {
-            // Delete existing domains
-            $project->businessDomains()->delete();
-
-            // Create new domains
-            foreach ($request->input('business_domains') as $domainData) {
-                $businessDomain = new BusinessDomain([
-                    'title' => $domainData['title'],
-                    'project_id' => $project->id,
-                ]);
-                $project->businessDomains()->save($businessDomain);
+        if ($request->filled('ar') || $request->filled('en')) {
+            $updatedTitles = [];
+            foreach (['ar', 'en'] as $language) {
+                if (isset($request[$language]['title'])) {
+                    $updatedTitles[$language] = $request[$language]['title'];
+                }
+            }
+            foreach ($updatedTitles as $language => $titles) {
+                $existingDomains = $project->businessDomains()->where('language', $language)->get();
+                foreach ($titles as $title) {
+                    $businessDomain = $existingDomains->firstWhere('title', $title);
+                    if ($businessDomain) {
+                        $businessDomain->update(['title' => $title]);
+                    } else {
+                        $businessDomain = new BusinessDomain([
+                            'title' => $title,
+                            'project_id' => $project->id,
+                            'language' => $language,
+                        ]);
+                        $project->businessDomains()->save($businessDomain);
+                    }
+                }
+                foreach ($existingDomains as $existingDomain) {
+                    if (!in_array($existingDomain->title, $titles)) {
+                        $existingDomain->delete();
+                    }
+                }
             }
         }
 

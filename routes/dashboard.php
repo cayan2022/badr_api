@@ -208,8 +208,8 @@ Route:: as('dashboard.')
             });
             /*ContactUs*/
             Route::group([], function () {
-                Route::get('contactUs', [ContactUsController::class, 'index'])->name('index');
-                Route::get('contactUs/show/{contactUs}', [ContactUsController::class, 'show'])->name('show');
+                Route::get('contactUs', [ContactUsController::class, 'index'])->name('index')->middleware('check_permissions');;
+                Route::get('contactUs/{contactUs}', [ContactUsController::class, 'show'])->name('show')->middleware('check_permissions');;
             });
 
             /*Portfolios*/

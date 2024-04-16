@@ -36,7 +36,7 @@ class PermissionSeeder extends Seeder
         permission::create(['name' => 'show moderators reports', 'type' => 'reports', 'guard_name' => 'api']);
         permission::create(['name' => 'show statuses reports', 'type' => 'reports', 'guard_name' => 'api']);
 
-        $items = ['profiles', 'doctors', 'testimonials', 'offers', 'services', 'tidings', 'categories', 'blogs', 'abouts', 'partners', 'projects', 'sources', 'branches', 'customers', 'portfolio-categories', 'portfolios'];
+        $items = ['profiles', 'doctors', 'testimonials', 'offers', 'services', 'tidings', 'categories', 'blogs', 'abouts', 'partners', 'projects', 'sources', 'branches', 'customers', 'portfolio-categories', 'portfolios','contact-us'];
         foreach ($items as $item) {
             permission::create(['name' => "show $item", 'type' => $item, 'guard_name' => 'api']);
             permission::create(['name' => "create $item", 'type' => $item, 'guard_name' => 'api']);

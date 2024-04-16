@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BusinessDomain extends Model  implements TranslatableContract
 {
-    use  Translatable, SoftDeletes;
+    use  Translatable;
     protected $fillable = [
         'project_id',
     ];
