@@ -209,7 +209,7 @@ Route:: as('dashboard.')
             /*ContactUs*/
             Route::group([], function () {
                 Route::get('contactUs', [ContactUsController::class, 'index'])->name('index')->middleware('check_permissions');;
-                Route::get('contactUs/{contactUs}', [ContactUsController::class, 'show'])->name('show')->middleware('check_permissions');;
+                Route::get('contactUs/{id}', [ContactUsController::class, 'show'])->name('show')->middleware('check_permissions');;
             });
 
             /*Portfolios*/

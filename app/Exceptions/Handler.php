@@ -39,10 +39,10 @@ class Handler extends ExceptionHandler
                 return response()->json(['message' => __('supported.notfound')], 404);
             }
         });
-//        $this->renderable(function (AccessDeniedHttpException $e, $request) {
-//            if ($request->is('api/*')) {
-//                return response()->json(['message' => __('auth.errors.has_no_permission')], 403);
-//            }
-//        });
+        $this->renderable(function (AccessDeniedHttpException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json(['message' => __('auth.errors.has_no_permission')], 403);
+            }
+        });
     }
 }
