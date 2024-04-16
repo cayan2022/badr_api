@@ -9,7 +9,7 @@ use App\Models\ContactUs;
 
 class ContactUsController extends Controller
 {
-    public function __invoke(CreateContactUsRequest $createContactUsRequest): ContactUsResource
+    public function addNew(CreateContactUsRequest $createContactUsRequest): ContactUsResource
     {
         $contactUs= ContactUs::create($createContactUsRequest->validated());
         if($createContactUsRequest->hasFile('file') && $createContactUsRequest->file('file')->isValid()){
