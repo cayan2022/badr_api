@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class ContactUsController extends Controller
 {
-    public function __invoke(Request $createContactUsRequest): ContactUsResource
+    public function store(Request $createContactUsRequest): ContactUsResource
     {
         $contactUs = ContactUs::create($createContactUsRequest->validated());
         if ($createContactUsRequest->hasFile('file') && $createContactUsRequest->file('file')->isValid()) {
