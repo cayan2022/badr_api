@@ -207,10 +207,10 @@ Route:: as('dashboard.')
                 Route::apiResource('portfolio-categories', PortfolioCategoryController::class)->except('update')->middleware('check_permissions');
             });
             /*ContactUs*/
-            Route::group([], function () {
+           /* Route::group([], function () {
                 Route::get('contactUs', [ContactUsController::class, 'index'])->name('index')->middleware('check_permissions');;
                 Route::get('contactUs/{id}', [ContactUsController::class, 'show'])->name('show')->middleware('check_permissions');;
-            });
+            });*/
 
             /*Portfolios*/
             Route::group([], function () {
