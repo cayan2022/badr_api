@@ -117,11 +117,12 @@ class ProjectController extends Controller
             $ownerImage = $request->file('owner_image')->store('owner_images');
             $validatedData['owner_image'] = $ownerImage;
         }
-        // Store or update project sliders
+       // Store or update project sliders
         if ($request->hasFile('project_sliders')) {
             foreach ($request->file('project_sliders') as $slider) {
-                $project->addMedia($slider)
-                    ->toMediaCollection('project_sliders');
+                $sliderImage = $slider->store('project_sliders');
+                // Assuming you want to store multiple sliders, you should use an array
+                $validatedData['project_sliders'][] = $sliderImage;
             }
         }
         if ($request->filled('ar') || $request->filled('en')) {

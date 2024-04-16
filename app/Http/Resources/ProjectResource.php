@@ -25,7 +25,7 @@ class ProjectResource extends JsonResource
             'developer_image' => $this->getFirstMediaUrl('developer_images'),
             'owner_name' => $this->owner_name,
             'owner_image' => $this->getFirstMediaUrl('owner_images'),
-            'project_slider' => $this->getFirstMediaUrl('project_sliders'),
+            'project_sliders' => $this->getProjectSlidersUrls(),
             'area' => $this->area,
             'buildings_number' => $this->buildings_number,
             'building_area' => $this->building_area,
@@ -33,5 +33,16 @@ class ProjectResource extends JsonResource
             'business_domains' => BusinessDomainResource::collection($this->businessDomains),
             'translations' => $this->getTranslationsArray()
         ];
+    }
+    /**
+     * Get URLs of all project sliders.
+     *
+     * @return array
+     */
+    protected function getProjectSlidersUrls()
+    {
+        return $this->getMedia('project_sliders')->map(function ($media) {
+            return $media->getUrl();
+        })->toArray();
     }
 }

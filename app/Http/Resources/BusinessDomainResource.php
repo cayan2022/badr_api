@@ -16,7 +16,7 @@ class BusinessDomainResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'translations' => $this->getTranslationsArray()
+            'title' => $this->title
         ];
     }
 }
