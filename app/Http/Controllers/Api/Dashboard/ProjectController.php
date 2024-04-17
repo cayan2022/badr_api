@@ -4,15 +4,13 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Models\BusinessDomain;
 use App\Models\Project;
-use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjectResource;
 use App\Helpers\Traits\RespondsWithHttpStatus;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Http\Requests\Api\Dashboard\StoreProjectRequest;
 use App\Http\Requests\Api\Dashboard\UpdateProjectRequest;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Astrotomic\Translatable\Locales;
+
 
 class ProjectController extends Controller
 {
@@ -74,7 +72,8 @@ class ProjectController extends Controller
 //                }
 //            }
 //        }
-        dd(app()->getTranslation());
+        $locales = Locales::getLocales();
+        dd($locales);
         foreach (app()->getLocale() as $language) {
 //            if (isset($request[$language]['title'])) {
 //                $titles = $request[$language]['title'];
