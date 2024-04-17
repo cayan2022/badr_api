@@ -60,21 +60,34 @@ class ProjectController extends Controller
                     ->toMediaCollection('project_sliders');
             }
         }
-        if ($request->filled('ar') || $request->filled('en')) {
-            foreach (['ar', 'en'] as $language) {
-                if (isset($request[$language]['title'])) {
-                    $titles = $request[$language]['title'];
-                    foreach ($titles as $title) {
-                        $businessDomain = new BusinessDomain([
-                            'title' => $title,
-                            'project_id' => $project->id,
-                            'language' => $language,
-                        ]);
-                        $project->businessDomains()->save($businessDomain);
-                    }
-                }
-            }
+//        if ($request->filled('ar') || $request->filled('en')) {
+//            foreach (app()->getLocale() as $language) {
+//                if (isset($request[$language]['title'])) {
+//                    $titles = $request[$language]['title'];
+//                    foreach ($titles as $title) {
+//                        $businessDomain = new BusinessDomain([
+//                            'title' => $title,
+//                            'project_id' => $project->id,
+//                        ]);
+//                        $project->businessDomains()->save($businessDomain);
+//                    }
+//                }
+//            }
+//        }
+        dd(app()->getLocale());
+        foreach (app()->getLocale() as $language) {
+//            if (isset($request[$language]['title'])) {
+//                $titles = $request[$language]['title'];
+//                foreach ($titles as $title) {
+//                    $businessDomain = new BusinessDomain([
+//                        'title' => $title,
+//                        'project_id' => $project->id,
+//                    ]);
+//                    $project->businessDomains()->save($businessDomain);
+//                }
+//            }
         }
+
         return $project->getResource();
     }
 
@@ -117,7 +130,7 @@ class ProjectController extends Controller
             $ownerImage = $request->file('owner_image')->store('owner_images');
             $validatedData['owner_image'] = $ownerImage;
         }
-       // Store or update project sliders
+        // Store or update project sliders
         if ($request->hasFile('project_sliders')) {
             foreach ($request->file('project_sliders') as $slider) {
                 $sliderImage = $slider->store('project_sliders');
