@@ -9,10 +9,10 @@ class BusinessDomainResource extends JsonResource
     public function toArray($request)
     {
         $locale = app()->getLocale();
-        dd($locale);
+        $other_locale = $locale == 'ar' ? 'en' : 'ar';
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'title' => $this->title ?? $this->translate($other_locale)->title,
         ];
     }
 }
