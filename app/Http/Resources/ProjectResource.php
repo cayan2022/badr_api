@@ -16,17 +16,16 @@ class ProjectResource extends JsonResource
     {
         $business_ar = [];
         $business_en = [];
-        foreach ($this->businessDomains as $key => $domain){
-            if (isset($domain->translate()->locale) && $domain->translate()->locale == 'ar'){
+        foreach ($this->businessDomains as $key => $domain) {
+            if (isset($domain->translate()->locale) && $domain->translate()->locale == 'ar') {
                 $business_ar[$key]['id'] = $domain->id;
                 $business_ar[$key]['title'] = $domain->translate('ar')->title;
-            }else{
+            } else {
                 $business_en[$key]['id'] = $domain->id;
                 $business_en[$key]['title'] = $domain->translate('en')->title;
             }
         }
 
-        dd($business_ar,$business_en);
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -43,16 +42,10 @@ class ProjectResource extends JsonResource
             'buildings_number' => $this->buildings_number,
             'building_area' => $this->building_area,
             'is_block' => $this->is_block,
-//            'business_domains' => [
-//                'ar' => [
-//                    'id' => ,
-//                    'title' => ,
-//                ],
-//                'en' => [
-//                    'id' => ,
-//                    'title' => ,
-//                ]
-//            ],
+            'business_domains' => [
+                'ar' => $business_ar,
+                'en' => $business_en
+            ],
             'translations' => $this->getTranslationsArray()
         ];
     }
@@ -71,6 +64,7 @@ class ProjectResource extends JsonResource
             ];
         })->toArray();
     }
+
     protected function getBusinessDomainsWithTranslations()
     {
         $translations = [];
