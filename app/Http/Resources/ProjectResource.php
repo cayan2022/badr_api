@@ -14,6 +14,7 @@ class ProjectResource extends JsonResource
      */
     public function toArray($request)
     {
+        dd($this->businessDomains);
         return [
             'id' => $this->id,
             'name' => $this->name,
