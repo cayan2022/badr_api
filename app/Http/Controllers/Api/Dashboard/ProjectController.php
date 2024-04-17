@@ -9,18 +9,11 @@ use App\Http\Resources\ProjectResource;
 use App\Helpers\Traits\RespondsWithHttpStatus;
 use App\Http\Requests\Api\Dashboard\StoreProjectRequest;
 use App\Http\Requests\Api\Dashboard\UpdateProjectRequest;
-use Astrotomic\Translatable\Locales;
 
 
 class ProjectController extends Controller
 {
     use RespondsWithHttpStatus;
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return AnonymousResourceCollection
-     */
     public function index()
     {
         return ProjectResource::collection(Project::filter()->latest()->paginate());
@@ -72,9 +65,7 @@ class ProjectController extends Controller
 //                }
 //            }
 //        }
-        $locales = Locales::getLocales();
-        dd($locales);
-        foreach (app()->getLocale() as $language) {
+            dd($request->all());
 //            if (isset($request[$language]['title'])) {
 //                $titles = $request[$language]['title'];
 //                foreach ($titles as $title) {
@@ -85,7 +76,7 @@ class ProjectController extends Controller
 //                    $project->businessDomains()->save($businessDomain);
 //                }
 //            }
-        }
+
 
         return $project->getResource();
     }
