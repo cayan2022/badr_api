@@ -14,6 +14,19 @@ class ProjectResource extends JsonResource
      */
     public function toArray($request)
     {
+        $business_ar = [];
+        $business_en = [];
+        foreach ($this->businessDomains as $domain){
+            if ($domain->locale == 'ar'){
+                $business_ar['id'] = $domain->id;
+                $business_ar['title'] = $domain->translate('ar')->title;
+            }else{
+                $business_en['id'] = $domain->id;
+                $business_en['title'] = $domain->translate('en')->title;
+            }
+        }
+
+        dd($business_ar,$business_en);
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -30,7 +43,16 @@ class ProjectResource extends JsonResource
             'buildings_number' => $this->buildings_number,
             'building_area' => $this->building_area,
             'is_block' => $this->is_block,
-            'business_domains' => BusinessDomainResource::collection($this->businessDomains),
+//            'business_domains' => [
+//                'ar' => [
+//                    'id' => ,
+//                    'title' => ,
+//                ],
+//                'en' => [
+//                    'id' => ,
+//                    'title' => ,
+//                ]
+//            ],
             'translations' => $this->getTranslationsArray()
         ];
     }
