@@ -16,13 +16,13 @@ class ProjectResource extends JsonResource
     {
         $business_ar = [];
         $business_en = [];
-        foreach ($this->businessDomains as $domain){
+        foreach ($this->businessDomains as $key => $domain){
             if (isset($domain->translate()->locale) && $domain->translate()->locale == 'ar'){
-                $business_ar['id'] = $domain->id;
-                $business_ar['title'] = $domain->translate('ar')->title;
+                $business_ar[$key]['id'] = $domain->id;
+                $business_ar[$key]['title'] = $domain->translate('ar')->title;
             }else{
-                $business_en['id'] = $domain->id;
-                $business_en['title'] = $domain->translate('en')->title;
+                $business_en[$key]['id'] = $domain->id;
+                $business_en[$key]['title'] = $domain->translate('en')->title;
             }
         }
 
