@@ -25,12 +25,12 @@ class ProjectResource extends JsonResource
             'developer_image' => asset($this->getAvatarDeveloper()),
             'owner_name' => $this->owner_name,
             'owner_image' => asset($this->getAvatarOwner()),
-            'project_sliders' => $this->getProjectSlidersUrls(),
+            'project_sliders' => $this->getProjectSlidersData(),
             'area' => $this->area,
             'buildings_number' => $this->buildings_number,
             'building_area' => $this->building_area,
             'is_block' => $this->is_block,
-            'business_domain' => $this->getBusinessDomainsWithTranslations(),
+            'business_domains' => BusinessDomainResource::collection($this->businessDomains),
             'translations' => $this->getTranslationsArray()
         ];
     }
@@ -40,10 +40,13 @@ class ProjectResource extends JsonResource
      *
      * @return array
      */
-    protected function getProjectSlidersUrls()
+    protected function getProjectSlidersData()
     {
         return $this->getMedia('project_slider')->map(function ($media) {
-            return asset($media->getUrl());
+            return [
+                'url' => asset($media->getUrl()),
+                'id' => $media->id
+            ];
         })->toArray();
     }
     protected function getBusinessDomainsWithTranslations()

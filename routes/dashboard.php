@@ -143,6 +143,7 @@ Route:: as('dashboard.')
                 Route::put('projects/{project}/block', [ProjectController::class, 'block'])->name('projects.block')->middleware('can:block projects');
                 Route::put('projects/{project}/active', [ProjectController::class, 'active'])->name('projects.active')->middleware('can:active projects');
                 Route::post('projects/{project}', [ProjectController::class, 'update'])->name('projects.update')->middleware('can:update projects');
+                Route::delete('projects/media/{id}', [ProjectController::class, 'removeMedia']);
                 Route::apiResource('projects', ProjectController::class)->except('update')->middleware('check_permissions');
             });
             /*Source*/

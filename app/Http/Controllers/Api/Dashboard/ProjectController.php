@@ -13,6 +13,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Http\Requests\Api\Dashboard\StoreProjectRequest;
 use App\Http\Requests\Api\Dashboard\UpdateProjectRequest;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProjectController extends Controller
 {
@@ -191,5 +192,17 @@ class ProjectController extends Controller
     {
         $project->active();
         return $this->success(__('auth.success_operation'));
+    }
+
+    public function removeMedia($id)
+    {
+        // Find the media by ID
+        $media = Media::findOrFail($id);
+
+        // Delete the media file from the disk and remove the record from the media table
+        $media->delete();
+
+        return $this->success(__('auth.success_operation'));
+
     }
 }

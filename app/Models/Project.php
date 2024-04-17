@@ -12,6 +12,7 @@ use Astrotomic\Translatable\Translatable;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Project extends Model implements HasMedia, TranslatableContract
 {
@@ -84,5 +85,9 @@ class Project extends Model implements HasMedia, TranslatableContract
     public function businessDomains()
     {
         return $this->hasMany(BusinessDomain::class);
+    }
+    public function sliderImage()
+    {
+        return $this->hasOne(Media::class, 'model_id')->where('collection_name', 'project_slider');
     }
 }
