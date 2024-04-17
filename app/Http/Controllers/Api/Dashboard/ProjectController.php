@@ -44,20 +44,29 @@ class ProjectController extends Controller
         }
         // Store developer name and image
         if ($request->hasFile('developer_image') && $request->file('developer_image')->isValid()) {
-            $developerImage = $request->file('developer_image')->store('developer_images');
-            $validatedData['developer_image'] = $developerImage;
+            $project->clearMediaCollection(Project::MEDIA_COLLECTION_NAME_DEVELOPER);
+            $project->addMediaFromRequest('developer_image')
+                ->sanitizingFileName(fn($fileName) => updateFileName($fileName))
+                ->toMediaCollection(Project::MEDIA_COLLECTION_NAME_DEVELOPER);
         }
+
 
         // Store owner name and image
         if ($request->hasFile('owner_image') && $request->file('owner_image')->isValid()) {
-            $ownerImage = $request->file('owner_image')->store('owner_images');
-            $validatedData['owner_image'] = $ownerImage;
+            $project->clearMediaCollection(Project::MEDIA_COLLECTION_NAME_OWNER);
+            $project->addMediaFromRequest('owner_image')
+                ->sanitizingFileName(fn($fileName) => updateFileName($fileName))
+                ->toMediaCollection(Project::MEDIA_COLLECTION_NAME_OWNER);
         }
         // Store project sliders
         if ($request->hasFile('project_sliders')) {
+            // Clear the media collection before adding new sliders
+            $project->clearMediaCollection(Project::MEDIA_COLLECTION_NAME_SLIDER);
+
             foreach ($request->file('project_sliders') as $slider) {
                 $project->addMedia($slider)
-                    ->toMediaCollection('project_sliders');
+                    ->sanitizingFileName(fn($fileName) => updateFileName($fileName))
+                    ->toMediaCollection(Project::MEDIA_COLLECTION_NAME_SLIDER);
             }
         }
         if ($request->filled('ar') || $request->filled('en')) {
@@ -66,11 +75,11 @@ class ProjectController extends Controller
                     $titles = $request[$language]['title'];
                     foreach ($titles as $title) {
                         $businessDomain = new BusinessDomain([
-                            'title' => $title,
                             'project_id' => $project->id,
                             'language' => $language,
                         ]);
-                        $project->businessDomains()->save($businessDomain);
+                        $businessDomain->translateOrNew($language)->title = $title;
+                        $businessDomain->save();
                     }
                 }
             }
@@ -106,55 +115,49 @@ class ProjectController extends Controller
                 ->sanitizingFileName(fn($fileName) => updateFileName($fileName))
                 ->toMediaCollection(Project::MEDIA_COLLECTION_NAME);
         }
-        // Store developer name and image
-        if ($request->hasFile('developer_image') && $request->file('developer_image')->isValid()) {
-            $developerImage = $request->file('developer_image')->store('developer_images');
-            $validatedData['developer_image'] = $developerImage;
-        }
-
-        // Store owner name and image
         if ($request->hasFile('owner_image') && $request->file('owner_image')->isValid()) {
-            $ownerImage = $request->file('owner_image')->store('owner_images');
-            $validatedData['owner_image'] = $ownerImage;
+            $project->clearMediaCollection(Project::MEDIA_COLLECTION_NAME_OWNER);
+            $project->addMediaFromRequest('owner_image')
+                ->sanitizingFileName(fn($fileName) => updateFileName($fileName))
+                ->toMediaCollection(Project::MEDIA_COLLECTION_NAME_OWNER);
         }
-       // Store or update project sliders
+        if ($request->hasFile('developer_image') && $request->file('developer_image')->isValid()) {
+            $project->clearMediaCollection(Project::MEDIA_COLLECTION_NAME_DEVELOPER);
+            $project->addMediaFromRequest('developer_image')
+                ->sanitizingFileName(fn($fileName) => updateFileName($fileName))
+                ->toMediaCollection(Project::MEDIA_COLLECTION_NAME_DEVELOPER);
+        }
+        // Update project sliders if provided
         if ($request->hasFile('project_sliders')) {
+            // Clear the media collection before adding new sliders
+            $project->clearMediaCollection(Project::MEDIA_COLLECTION_NAME_SLIDER);
+
             foreach ($request->file('project_sliders') as $slider) {
-                $sliderImage = $slider->store('project_sliders');
-                // Assuming you want to store multiple sliders, you should use an array
-                $validatedData['project_sliders'][] = $sliderImage;
+                $project->addMedia($slider)
+                    ->sanitizingFileName(fn($fileName) => updateFileName($fileName))
+                    ->toMediaCollection(Project::MEDIA_COLLECTION_NAME_SLIDER);
             }
         }
+        // Update BusinessDomain translations
         if ($request->filled('ar') || $request->filled('en')) {
-            $updatedTitles = [];
             foreach (['ar', 'en'] as $language) {
                 if (isset($request[$language]['title'])) {
-                    $updatedTitles[$language] = $request[$language]['title'];
-                }
-            }
-            foreach ($updatedTitles as $language => $titles) {
-                $existingDomains = $project->businessDomains()->where('language', $language)->get();
-                foreach ($titles as $title) {
-                    $businessDomain = $existingDomains->firstWhere('title', $title);
-                    if ($businessDomain) {
-                        $businessDomain->update(['title' => $title]);
-                    } else {
-                        $businessDomain = new BusinessDomain([
-                            'title' => $title,
-                            'project_id' => $project->id,
-                            'language' => $language,
-                        ]);
-                        $project->businessDomains()->save($businessDomain);
-                    }
-                }
-                foreach ($existingDomains as $existingDomain) {
-                    if (!in_array($existingDomain->title, $titles)) {
-                        $existingDomain->delete();
+                    $titles = $request[$language]['title'];
+                    foreach ($titles as $titleId => $title) {
+                        // Retrieve the BusinessDomain instance by project_id
+                        $businessDomain = BusinessDomain::where('project_id', $project->id)->first();
+                        // If BusinessDomain doesn't exist, create a new one
+                        if (!$businessDomain) {
+                            $businessDomain = new BusinessDomain(['project_id' => $project->id]);
+                        }
+                        // Set the translation for the title attribute
+                        $businessDomain->translateOrNew($language)->title = $title;
+                        // Save the BusinessDomain instance
+                        $businessDomain->save();
                     }
                 }
             }
         }
-
         return $project->getResource();
     }
 

@@ -20,20 +20,21 @@ class ProjectResource extends JsonResource
             'classification' => $this->classification,
             'short_description' => $this->short_description,
             'full_description' => $this->full_description,
-            'image' => $this->getAvatar(),
+            'image' => asset($this->getAvatar()),
             'developer_name' => $this->developer_name,
-            'developer_image' => $this->getFirstMediaUrl('developer_images'),
+            'developer_image' => asset($this->getAvatarDeveloper()),
             'owner_name' => $this->owner_name,
-            'owner_image' => $this->getFirstMediaUrl('owner_images'),
+            'owner_image' => asset($this->getAvatarOwner()),
             'project_sliders' => $this->getProjectSlidersUrls(),
             'area' => $this->area,
             'buildings_number' => $this->buildings_number,
             'building_area' => $this->building_area,
             'is_block' => $this->is_block,
-            'business_domains' => BusinessDomainResource::collection($this->businessDomains),
+            'business_domain' => $this->getBusinessDomainsWithTranslations(),
             'translations' => $this->getTranslationsArray()
         ];
     }
+
     /**
      * Get URLs of all project sliders.
      *
@@ -41,8 +42,33 @@ class ProjectResource extends JsonResource
      */
     protected function getProjectSlidersUrls()
     {
-        return $this->getMedia('project_sliders')->map(function ($media) {
-            return $media->getUrl();
+        return $this->getMedia('project_slider')->map(function ($media) {
+            return asset($media->getUrl());
         })->toArray();
+    }
+    protected function getBusinessDomainsWithTranslations()
+    {
+        $translations = [];
+
+        // Loop through each language
+        foreach (['ar', 'en'] as $language) {
+            $translations[$language] = [];
+
+            // Loop through each business domain
+            foreach ($this->businessDomains as $businessDomain) {
+                $translation = $businessDomain->translations->where('locale', $language)->first();
+
+                // Include the translation if it exists
+                if ($translation) {
+                    $translations[$language][] = [
+                        'title' => $translation->title,
+                        'project_id' => $this->id,
+                        'id' => $translation->business_domain_id
+                    ];
+                }
+            }
+        }
+
+        return $translations;
     }
 }

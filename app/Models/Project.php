@@ -30,7 +30,13 @@ class Project extends Model implements HasMedia, TranslatableContract
     ];
     public $translatedAttributes = ['name','classification','short_description','full_description'];
     public const MEDIA_COLLECTION_NAME = 'project_avatar';
+    public const MEDIA_COLLECTION_NAME_DEVELOPER = 'developer_image';
+    public const MEDIA_COLLECTION_NAME_OWNER = 'owner_image';
+    public const MEDIA_COLLECTION_NAME_SLIDER = 'project_slider';
     public const MEDIA_COLLECTION_URL = 'images/project.png';
+    public const MEDIA_COLLECTION_URL_DEVELOPER = 'developer_images/project.png';
+    public const MEDIA_COLLECTION_URL_OWNER = 'owner_images/project.png';
+    public const MEDIA_COLLECTION_URL_SLIDER = 'project_sliders/project.png';
 
     protected $filter= ProjectFilter::class;
 
@@ -46,24 +52,34 @@ class Project extends Model implements HasMedia, TranslatableContract
     {
         return $this->getFirstMediaUrl(self::MEDIA_COLLECTION_NAME);
     }
+    public function getAvatarOwner()
+    {
+
+        return $this->getFirstMediaUrl(self::MEDIA_COLLECTION_NAME_OWNER);
+    }
+    public function getAvatarDeveloper()
+    {
+        return $this->getFirstMediaUrl(self::MEDIA_COLLECTION_NAME_DEVELOPER);
+    }
+    public function getAvatarSlider()
+    {
+        return $this->getFirstMediaUrl(self::MEDIA_COLLECTION_NAME_SLIDER);
+    }
 
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection(self::MEDIA_COLLECTION_NAME)
             ->useFallbackUrl(asset(self::MEDIA_COLLECTION_URL))
             ->useFallbackPath(asset(self::MEDIA_COLLECTION_URL));
-        $this->addMediaCollection('developer_images')
-            ->useFallbackUrl(asset('developer_images'))
-            ->useFallbackPath(asset('developer_images'));
-        $this->addMediaCollection('owner_images')
-            ->useFallbackUrl(asset('owner_images'))
-            ->useFallbackPath(asset('owner_images'));
-        $this->addMediaCollection('project_sliders')
-            ->useFallbackUrl(asset('project_sliders'))
-            ->useFallbackPath(asset('project_sliders'));
-//        $this->addMediaCollection('developer_images');
-//        $this->addMediaCollection('owner_images');
-//        $this->addMediaCollection('project_sliders');
+        $this->addMediaCollection(self::MEDIA_COLLECTION_NAME_DEVELOPER)
+            ->useFallbackUrl(asset(self::MEDIA_COLLECTION_URL_DEVELOPER))
+            ->useFallbackPath(asset(self::MEDIA_COLLECTION_URL_DEVELOPER));
+        $this->addMediaCollection(self::MEDIA_COLLECTION_NAME_OWNER)
+            ->useFallbackUrl(asset(self::MEDIA_COLLECTION_URL_OWNER))
+            ->useFallbackPath(asset(self::MEDIA_COLLECTION_URL_OWNER));
+        $this->addMediaCollection(self::MEDIA_COLLECTION_NAME_SLIDER)
+            ->useFallbackUrl(asset(self::MEDIA_COLLECTION_URL_SLIDER))
+            ->useFallbackPath(asset(self::MEDIA_COLLECTION_URL_SLIDER));
     }
     public function businessDomains()
     {
