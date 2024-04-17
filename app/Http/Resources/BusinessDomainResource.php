@@ -12,8 +12,8 @@ class BusinessDomainResource extends JsonResource
         $other_locale = $locale == 'ar' ? 'en' : 'ar';
         return [
             'id' => $this->id,
-            'title_'.$locale => $this->translate($locale)->title,
-            'title_'.$other_locale => $this->translate($other_locale)->title,
+            'title_' . $locale => $this->title,
+            'title_' . $other_locale => $this->title ?? $this->translate($other_locale)->title,
         ];
     }
 }
