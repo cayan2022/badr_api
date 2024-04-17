@@ -17,6 +17,7 @@ class ProjectResource extends JsonResource
         $business_ar = [];
         $business_en = [];
         foreach ($this->businessDomains as $domain){
+            dd($domain->translate()->locale);
             if ($domain->translate()->locale == 'ar'){
                 $business_ar['id'] = $domain->id;
                 $business_ar['title'] = $domain->translate('ar')->title;
