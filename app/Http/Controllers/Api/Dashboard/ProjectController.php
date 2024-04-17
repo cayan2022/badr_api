@@ -74,7 +74,7 @@ class ProjectController extends Controller
 //                }
 //            }
 //        }
-        dd(app()->getLocale());
+        dd(app()->getLocales());
         foreach (app()->getLocale() as $language) {
 //            if (isset($request[$language]['title'])) {
 //                $titles = $request[$language]['title'];
