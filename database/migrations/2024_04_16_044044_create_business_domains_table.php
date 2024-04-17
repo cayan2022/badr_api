@@ -15,7 +15,7 @@ class CreateBusinessDomainsTable extends Migration
     {
         Schema::create('business_domains', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->constrained()->cascadeOnUpdate();
+            $table->foreignId('project_id')->constrained()->onDelete('cascade')->cascadeOnUpdate();
             $table->timestamps();
         });
         Schema::create('business_domain_translations', function (Blueprint $table) {
