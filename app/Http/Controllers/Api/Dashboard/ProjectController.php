@@ -65,17 +65,8 @@ class ProjectController extends Controller
 //                }
 //            }
 //        }
-            dd($request->all());
-//            if (isset($request[$language]['title'])) {
-//                $titles = $request[$language]['title'];
-//                foreach ($titles as $title) {
-//                    $businessDomain = new BusinessDomain([
-//                        'title' => $title,
-//                        'project_id' => $project->id,
-//                    ]);
-//                    $project->businessDomains()->save($businessDomain);
-//                }
-//            }
+
+        dd($request->title);
 
 
         return $project->getResource();
