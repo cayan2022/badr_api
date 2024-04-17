@@ -14,10 +14,11 @@ class BusinessDomainResource extends JsonResource
      */
     public function toArray($request)
     {
+        dd($this);
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'translated_title' => $this->getTranslation('title', 'en')['title'],
+            'translated_title' => $this->getTranslation('title', 'en'),
         ];
     }
 }
