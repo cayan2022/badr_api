@@ -138,21 +138,16 @@ class ProjectController extends Controller
                     ->toMediaCollection(Project::MEDIA_COLLECTION_NAME_SLIDER);
             }
         }
-        // Update BusinessDomain translations
         if ($request->filled('ar') || $request->filled('en')) {
+            $project->businessDomains()->delete();
             foreach (['ar', 'en'] as $language) {
                 if (isset($request[$language]['title'])) {
                     $titles = $request[$language]['title'];
-                    foreach ($titles as $titleId => $title) {
-                        // Retrieve the BusinessDomain instance by project_id
-                        $businessDomain = BusinessDomain::where('project_id', $project->id)->first();
-                        // If BusinessDomain doesn't exist, create a new one
-                        if (!$businessDomain) {
-                            $businessDomain = new BusinessDomain(['project_id' => $project->id]);
-                        }
-                        // Set the translation for the title attribute
+                    foreach ($titles as $title) {
+                        $businessDomain = new BusinessDomain([
+                            'project_id' => $project->id,
+                        ]);
                         $businessDomain->translateOrNew($language)->title = $title;
-                        // Save the BusinessDomain instance
                         $businessDomain->save();
                     }
                 }
