@@ -82,7 +82,7 @@ class ProjectController extends Controller
 
                         BusinessDomainTranslation::create([
                             'business_domain_id' => $businessDomain->id,
-                            'locale' => $language,
+                            'locale' => $request[$language],
                             'title' => $title
                         ]);
                     }
@@ -154,7 +154,7 @@ class ProjectController extends Controller
                         ]);
                         BusinessDomainTranslation::create([
                             'business_domain_id' => $businessDomain->id,
-                            'locale' => $language,
+                            'locale' => $request[$language],
                             'title' => $title
                         ]);
                     }
