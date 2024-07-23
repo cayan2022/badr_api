@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Models\BusinessDomain;
 use App\Models\Project;
+use App\Models\Translations\BusinessDomainTranslation;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjectResource;
@@ -75,11 +76,15 @@ class ProjectController extends Controller
                 if (isset($request[$language]['title'])) {
                     $titles = $request[$language]['title'];
                     foreach ($titles as $title) {
-                        $businessDomain = new BusinessDomain([
+                        $businessDomain = BusinessDomain::create([
                             'project_id' => $project->id,
                         ]);
-                        $businessDomain->translateOrNew($language)->title = $title;
-                        $businessDomain->save();
+
+                        BusinessDomainTranslation::create([
+                            'business_domain_id' => $businessDomain->id,
+                            'locale' => $language,
+                            'title' => $title
+                        ]);
                     }
                 }
             }
@@ -144,11 +149,14 @@ class ProjectController extends Controller
                 if (isset($request[$language]['title'])) {
                     $titles = $request[$language]['title'];
                     foreach ($titles as $title) {
-                        $businessDomain = new BusinessDomain([
+                        $businessDomain = BusinessDomain::create([
                             'project_id' => $project->id,
                         ]);
-                        $businessDomain->translateOrNew($language)->title = $title;
-                        $businessDomain->save();
+                        BusinessDomainTranslation::create([
+                            'business_domain_id' => $businessDomain->id,
+                            'locale' => $language,
+                            'title' => $title
+                        ]);
                     }
                 }
             }
